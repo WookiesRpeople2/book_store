@@ -2,9 +2,24 @@ import "../assets/globals.css";
 import { Stack } from "expo-router";
 import { PortalHost } from "@rn-primitives/portal";
 import { ThemeProvider } from "@react-navigation/native";
-import { NAV_THEME } from "@/lib/theme/theme";
+import { NAV_THEME } from "@/lib/theme";
 import { useColorScheme } from "react-native";
 import { StatusBar } from 'expo-status-bar';
+import { ErrorBoundary } from "react-error-boundary";
+import { ErrorAlert } from "@/components/alert/errorAlert";
+import { Suspense } from "react";
+import { BookCardSkeleton } from "@/components/loaders/bookCardSkelaton";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      staleTime: 1000 * 60,
+    },
+  },
+});
+
 
 
 export default function RootLayout() {
@@ -12,9 +27,17 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={NAV_THEME[colorScheme]}>
-      <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
-      <Stack />
-      <PortalHost />
+      <QueryClientProvider client={queryClient}>
+        <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
+        <ErrorBoundary FallbackComponent={({ error }) => (
+          <ErrorAlert message={error.message} />
+        )}>
+          <Suspense fallback={<BookCardSkeleton />}>
+            <Stack />
+          </Suspense>
+        </ErrorBoundary>
+        <PortalHost />
+      </QueryClientProvider>
     </ThemeProvider>
   );
 }

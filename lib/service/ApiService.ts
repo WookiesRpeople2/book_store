@@ -21,12 +21,10 @@ export class ApiService {
       headers = {},
     } = config;
 
-    const httpMethod = this.determineMethod(method, data, params);
-
     try {
       const response = await this.executeRequest<T>(
         endpoint,
-        httpMethod,
+        method,
         params,
         data,
         headers,
@@ -34,7 +32,7 @@ export class ApiService {
 
       return response;
     } catch (error) {
-      const err = error as Err
+      const err = error as Err;
       throw new Error(err.message);
     }
   }
@@ -55,7 +53,7 @@ export class ApiService {
         ...headers,
       },
     };
-    
+
     if (this.isBodyMethod(method) && (data || (params && data))) {
       options.body = JSON.stringify(data || params);
     }
@@ -110,31 +108,10 @@ export class ApiService {
     return result;
   }
 
-  private determineMethod(
-    method?: string,
-    data?: any,
-    params?: Record<string, any>
-  ): string {
-    if (method) return method.toUpperCase();
-
-    if (data) {
-      if (data.id || data._id) {
-        return 'PUT';
-      }
-      return 'POST';
-    }
-
-    if (params?.action === 'delete' || params?.delete) {
-      return 'DELETE';
-    }
-
-    return 'GET';
-  }
-
   private isBodyMethod(method: string): boolean {
     return ['POST', 'PUT', 'PATCH'].includes(method.toUpperCase());
   }
-  
+
 
   //methods for explicit use cases
   async get<T>(endpoint: string, params?: Record<string, any>): Promise<ApiResponse<T>> {
