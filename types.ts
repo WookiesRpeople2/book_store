@@ -1,3 +1,5 @@
+import { UseMutationOptions, UseQueryOptions } from "@tanstack/react-query";
+
 export type ApiRequestConfig = {
   endpoint: string;
   method?: string;
@@ -14,6 +16,16 @@ export type ApiResponse<T> = {
   statusText: string;
   headers: Record<string, string>;
   timestamp: number;
+};
+
+
+export type ApiHookConfig<TData, TVariables> = {
+  endpoint: string;
+  method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+  params?: Record<string, any>;
+  data?: TVariables;
+  queryOptions?: UseQueryOptions<ApiResponse<TData>>;
+  mutationOptions?: UseMutationOptions<ApiResponse<TData>, Error, TVariables>;
 };
 
 export type Err = {
