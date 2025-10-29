@@ -15,3 +15,10 @@ export type ApiResponse<T> = {
   headers: Record<string, string>;
   timestamp: number;
 };
+
+export type Err = {
+  status: number;
+  statusText: string;
+  data: any;
+  message: string;
+};
