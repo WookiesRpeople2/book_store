@@ -1,5 +1,5 @@
-import { useMutation, useQuery, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
-import { ApiService } from '@/service/ApiService';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { ApiService } from '@/lib/service/ApiService';
 import { ApiHookConfig, ApiResponse } from '@/types';
 import { API } from '@/constants';
 
