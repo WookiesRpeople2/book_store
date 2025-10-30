@@ -56,7 +56,7 @@ export class ApiService {
       },
     };
 
-    if (isBody && data) {
+    if (data) {
       options.body = JSON.stringify(data);
     }
 
@@ -117,7 +117,7 @@ export class ApiService {
   }
 
   private isBodyMethod(method: string): boolean {
-    return ['POST', 'PUT', 'PATCH'].includes(method.toUpperCase());
+    return ['POST'].includes(method.toUpperCase());
   }
 
 

@@ -4,7 +4,7 @@ import { BookDetailsCard } from "@/components/card/bookDetailsCard";
 import { BookHero } from "@/components/hero/bookHero";
 import { BookTitleSection } from "@/components/sections/bookTitleSection";
 import { useBooks } from "@/hooks/books/useBooks";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { Edit, Trash2 } from "lucide-react-native";
 import { Text } from "react-native";
 import { ScrollView, View } from "react-native";
@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 export default function Index() {
   const { id } = useLocalSearchParams<{ id: string; }>();
   const { data, isLoading } = useBooks({ params: [id] });
+  const router = useRouter()
 
   const handleOnBack = () => {
     console.log("back");
@@ -24,7 +25,7 @@ export default function Index() {
   };
 
   const handleOnEdit = () => {
-    console.log("onEdit");
+    router.push({pathname: "/books/[id]/edit", params:{id}})
   };
 
   if (isLoading) {

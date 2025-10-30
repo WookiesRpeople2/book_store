@@ -25,9 +25,7 @@ export type ApiHookConfig<TData, TVariables> = {
   endpoint?: string;
   method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
   params?: Params;
-  data?: TVariables;
   mutationOptions?: UseMutationOptions<ApiResponse<TData>, Error, TVariables>;
-  default_option?: TDa;
 };
 
 export type Err = {

@@ -9,7 +9,6 @@ export const useApi = <TData, TVariables>({
   endpoint,
   method,
   params,
-  data,
   mutationOptions,
 }: ApiHookConfig<TData, TVariables>) => {
   const httpMethod = method!.toUpperCase();
@@ -29,14 +28,17 @@ export const useApi = <TData, TVariables>({
     });
   }
 
-  return useMutation<ApiResponse<TData>, Error, TVariables>({
-    mutationFn: (variables: TVariables) =>
-      apiService.request<TData>({
+ return useMutation<ApiResponse<TData>, Error, TVariables>({
+    mutationFn: (variables: TVariables) => {
+      const requestData = variables;
+      console.log("variables received in mutationFn:", variables);
+      return apiService.request<TData>({
         endpoint: endpoint ?? "",
         method: httpMethod,
         params,
-        data: variables || data,
-      }),
+        data: requestData,
+      });
+    },
     ...mutationOptions,
   });
 }
