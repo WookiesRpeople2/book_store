@@ -13,7 +13,7 @@ export const useApi = <TData, TVariables>({
 }: ApiHookConfig<TData, TVariables>) => {
   const httpMethod = method!.toUpperCase();
 
-  if (httpMethod == "DELETE" || httpMethod == "GET") {
+  if (httpMethod == "GET") {
     return useQuery<TData>({
       queryKey: [endpoint, params],
       queryFn: async () => {

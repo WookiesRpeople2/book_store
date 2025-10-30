@@ -1,10 +1,12 @@
 import { FC } from "react";
-import { Image, Pressable, Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import { Book } from "@/types";
 import { ThemeBadge } from "../badge/themeBadge";
 import { ReadBadge } from "../badge/readBadge";
 import { FavoriteBage } from "../badge/favoriteBade";
 import { RatingStars } from "../badge/ratingStars";
+import { IMAGE_PLACEHOLDER } from "@/constants";
+import {Image} from "../image"
 
 type Props = {
   onPress: () => void;
@@ -25,7 +27,7 @@ export const BookCard: FC<Props> = ({
 
       <View className="h-44 flex flex-col">
         <Image
-          source={{ uri: cover }}
+          url={cover}
           className="w-full h-36"
           resizeMode="cover"
         />
@@ -52,9 +54,9 @@ export const BookCard: FC<Props> = ({
 
       <View className="flex-1" />
       <View className="flex-col space-y-10 px-2">
-          <View>
-            <RatingStars rateing={rating} />
-          </View>
+        <View>
+          <RatingStars rateing={rating} />
+        </View>
         <View>
           <ThemeBadge theme={theme} />
         </View>

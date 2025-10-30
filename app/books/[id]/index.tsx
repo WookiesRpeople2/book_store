@@ -4,24 +4,29 @@ import { BookDetailsCard } from "@/components/card/bookDetailsCard";
 import { BookHero } from "@/components/hero/bookHero";
 import { BookTitleSection } from "@/components/sections/bookTitleSection";
 import { useBooks } from "@/hooks/books/useBooks";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams} from "expo-router";
 import { Edit, Trash2 } from "lucide-react-native";
 import { Text } from "react-native";
 import { ScrollView, View } from "react-native";
 import { Button } from "@/components/ui/button";
+import { DeleteAlerte } from "@/components/alert/deleteAlerte";
+import { useRouter } from "@/hooks/useRouter";
+import { FloatingAddButton } from "@/components/button/floatingAddButton";
 
 
 export default function Index() {
   const { id } = useLocalSearchParams<{ id: string; }>();
   const { data, isLoading } = useBooks({ params: [id] });
+  const {mutate} = useBooks({method: "DELETE", params: [id]})
   const router = useRouter()
 
   const handleOnBack = () => {
-    console.log("back");
+    router.goBackAndReload()    
   };
 
   const handleOnDelete = () => {
-    console.log("onDelete");
+    mutate({})
+    router.goBackAndReload()
   };
 
   const handleOnEdit = () => {
@@ -68,18 +73,8 @@ export default function Index() {
       </Text>
     </View>
   </Button>
-
-  <Button
-    onPress={handleOnDelete}
-    className="flex-1 bg-red-600 rounded-xl py-4 active:bg-red-700"
-  >
-    <View className="flex-row items-center justify-center gap-2">
-      <Trash2 size={20} color="white" />
-      <Text className="text-white font-semibold text-base">
-        Delete
-      </Text>
-    </View>
-  </Button>
+  
+  <DeleteAlerte buttonText="Delete Book" header="Are you sure you want to delete this book?" description="this action is irriversable and will delete this book forever" continueAction={handleOnDelete}/>
   </View>
   </ScrollView>
   );

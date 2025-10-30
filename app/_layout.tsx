@@ -9,7 +9,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { ErrorAlert } from "@/components/alert/errorAlert";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-const queryClient = new QueryClient({
+export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: 1,
@@ -28,7 +28,7 @@ export default function RootLayout() {
         <ErrorBoundary FallbackComponent={({ error }) => (
           <ErrorAlert message={error.message} />
         )}>
-            <Stack screenOptions={{ headerShown: false }} />
+          <Stack screenOptions={{ headerShown: false }} />
         </ErrorBoundary>
         <PortalHost />
       </QueryClientProvider>

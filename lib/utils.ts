@@ -22,4 +22,3 @@ export const createApiHook = <TData, TVariables = void>(endpoint: string) => {
     }) as UseQueryResult<TData> & UseMutationResult;
   };
 };
-
