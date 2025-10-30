@@ -7,8 +7,6 @@ import { useColorScheme } from "react-native";
 import { StatusBar } from 'expo-status-bar';
 import { ErrorBoundary } from "react-error-boundary";
 import { ErrorAlert } from "@/components/alert/errorAlert";
-import { Suspense } from "react";
-import { BookCardSkeleton } from "@/components/loaders/bookCardSkelaton";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const queryClient = new QueryClient({
@@ -20,8 +18,6 @@ const queryClient = new QueryClient({
   },
 });
 
-
-
 export default function RootLayout() {
   const colorScheme = useColorScheme() || 'light';
 
@@ -32,9 +28,7 @@ export default function RootLayout() {
         <ErrorBoundary FallbackComponent={({ error }) => (
           <ErrorAlert message={error.message} />
         )}>
-          <Suspense fallback={<BookCardSkeleton />}>
-            <Stack />
-          </Suspense>
+            <Stack screenOptions={{ headerShown: false }} />
         </ErrorBoundary>
         <PortalHost />
       </QueryClientProvider>

@@ -1,10 +1,11 @@
 import { UseMutationOptions, UseQueryOptions } from "@tanstack/react-query";
-import { Key } from "react";
+
+export type Params = (string | number)[] | Record<string, string>;
 
 export type ApiRequestConfig = {
   endpoint: string;
   method: string;
-  params?: Record<string, any>;
+  params?: Params;
   data?: any;
   headers?: Record<string, string>;
   timeout?: number;
@@ -21,11 +22,12 @@ export type ApiResponse<T> = {
 
 
 export type ApiHookConfig<TData, TVariables> = {
-  endpoint: string;
-  method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
-  params?: Record<string, any>;
+  endpoint?: string;
+  method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+  params?: Params;
   data?: TVariables;
   mutationOptions?: UseMutationOptions<ApiResponse<TData>, Error, TVariables>;
+  default_option?: TDa;
 };
 
 export type Err = {
@@ -38,14 +40,14 @@ export type Err = {
 
 //ApiResponse
 export type Book = {
-  id: Key,
+  id: number,
   name: string,
-  aurthor: string,
+  author: string,
   editor: string,
-  year: Number,
-  read: Boolean,
-  favorite: Boolean,
-  rateing: Number,
+  year: number,
+  read: boolean,
+  favorite: boolean,
+  rating: number,
   cover: string,
   theme: string;
 };

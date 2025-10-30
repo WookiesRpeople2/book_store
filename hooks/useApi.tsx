@@ -1,4 +1,4 @@
-import { useMutation, UseMutationResult, useQuery, UseQueryResult } from '@tanstack/react-query';
+import { useMutation, UseMutationResult, useQuery, UseQueryResult, useSuspenseQuery } from '@tanstack/react-query';
 import { ApiService } from '@/lib/service/ApiService';
 import { ApiHookConfig, ApiResponse } from '@/types';
 import { API } from '@/constants';
@@ -12,14 +12,14 @@ export const useApi = <TData, TVariables>({
   data,
   mutationOptions,
 }: ApiHookConfig<TData, TVariables>) => {
-  const httpMethod = method.toUpperCase();
+  const httpMethod = method!.toUpperCase();
 
   if (httpMethod == "DELETE" || httpMethod == "GET") {
     return useQuery<TData>({
       queryKey: [endpoint, params],
       queryFn: async () => {
         const res: ApiResponse<TData> = await apiService.request<TData>({
-          endpoint,
+          endpoint: endpoint ?? "",
           method: httpMethod,
           params,
         });
@@ -32,7 +32,7 @@ export const useApi = <TData, TVariables>({
   return useMutation<ApiResponse<TData>, Error, TVariables>({
     mutationFn: (variables: TVariables) =>
       apiService.request<TData>({
-        endpoint,
+        endpoint: endpoint ?? "",
         method: httpMethod,
         params,
         data: variables || data,

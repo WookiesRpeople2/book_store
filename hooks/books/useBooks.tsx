@@ -1,7 +1,11 @@
 import { useApi } from "@/hooks/useApi";
 import { BOOKS_API_BOOK_ENDPOINT } from "@/constants";
-import { Book } from "@/types";
+import { ApiHookConfig, Book } from "@/types";
 import { createApiHook } from "@/lib/utils";
 
-export const useBooks = createApiHook<Book[], Book>(BOOKS_API_BOOK_ENDPOINT);
+export const useBooks = <TData = Book, TVariables = void>(
+  config?: ApiHookConfig<TData, TVariables>
+) => {
+  return createApiHook<TData, TVariables>(BOOKS_API_BOOK_ENDPOINT)(config);
+};
 

@@ -1,4 +1,4 @@
-import { ApiRequestConfig, ApiResponse, Err } from "@/types";
+import { ApiRequestConfig, ApiResponse, Err, Params } from "@/types";
 
 export class ApiService {
   private baseURL: string;
@@ -40,11 +40,13 @@ export class ApiService {
   private async executeRequest<T>(
     endpoint: string,
     method: string,
-    params?: Record<string, any>,
+    params?: Params,
     data?: any,
     headers: Record<string, string> = {},
   ): Promise<ApiResponse<T>> {
-    const url = this.buildURL(endpoint, this.isBodyMethod(method) ? params : params || data);
+    const isBody = this.isBodyMethod(method);
+
+    const url = this.buildURL(endpoint, isBody ? undefined : params);
 
     const options: RequestInit = {
       method,
@@ -54,17 +56,16 @@ export class ApiService {
       },
     };
 
-    if (this.isBodyMethod(method) && (data || (params && data))) {
-      options.body = JSON.stringify(data || params);
+    if (isBody && data) {
+      options.body = JSON.stringify(data);
     }
 
     try {
       const response = await fetch(url, options);
-
       const responseData = await response.json();
 
       if (!response.ok) {
-        throw new Error(responseData.error);
+        throw new Error(responseData.error || `HTTP ${response.status}`);
       }
 
       return {
@@ -80,12 +81,20 @@ export class ApiService {
     }
   }
 
-  private buildURL(endpoint: string, params?: Record<string, any>): string {
+  private buildURL(endpoint: string, params?: (string | number)[] | Record<string, any>): string {
     const path = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
-    const url = `${this.baseURL}${path}`;
+    let url = `${this.baseURL}${path}`;
 
-    if (!params || Object.keys(params).length === 0) {
+    if (!params) {
       return url;
+    }
+
+    if (Array.isArray(params)) {
+      const joined = params
+        .filter((p) => p !== undefined && p !== null)
+        .map((p) => encodeURIComponent(String(p)))
+        .join('/');
+      return url.endsWith('/') ? `${url}${joined}` : `${url}/${joined}`;
     }
 
     const searchParams = new URLSearchParams();
@@ -95,10 +104,9 @@ export class ApiService {
       }
     });
 
-    const queryString = searchParams.toString();
-    return queryString ? `${url}?${queryString}` : url;
+    const query = searchParams.toString();
+    return query ? `${url}?${query}` : url;
   }
-
 
   private parseHeaders(headers: Headers): Record<string, string> {
     const result: Record<string, string> = {};
