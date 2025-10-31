@@ -3,15 +3,19 @@ import { Text, View } from "react-native";
 import { Calendar, Building2, BookOpen } from "lucide-react-native";
 import { ThemeBadge } from "@/components/badge/themeBadge";
 import { DetailRow } from "../detailrow";
+import { NotesAccordion } from "../accordian/noteAccordian";
+import { Notes } from "@/types";
 
 type Props = {
   editor: string;
   year: number;
   theme: string;
+  notes: Notes[]
 };
 
-export const BookDetailsCard: FC<Props> = ({ editor, year, theme }) => {
+export const BookDetailsCard: FC<Props> = ({ editor, year, theme, notes }) => {
   return (
+    <View>
     <View className="bg-white rounded-2xl shadow-lg p-6 mb-6">
       <Text className="text-sm font-bold text-gray-700 uppercase tracking-wide mb-6">
         Book Details
@@ -41,6 +45,8 @@ export const BookDetailsCard: FC<Props> = ({ editor, year, theme }) => {
           customValue={<ThemeBadge theme={theme} />}
         />
       </View>
+    </View>
+      <NotesAccordion notes={notes}/>
     </View>
   );
 };

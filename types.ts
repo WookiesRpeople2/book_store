@@ -49,3 +49,9 @@ export type Book = {
   cover: string,
   theme: string;
 };
+
+export type Notes = {
+  bookId: number;
+  content: string;
+  dateISO: Date;
+}

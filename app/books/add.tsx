@@ -1,12 +1,11 @@
 import { CreateBookForm } from "@/components/form/creatBookForm";
 import { useBooks } from "@/hooks/books/useBooks";
-import { useRouter } from "@/hooks/useRouter";
-import { useLocalSearchParams} from "expo-router";
+import { router, useLocalSearchParams} from "expo-router";
 import { Text } from "react-native";
+import { Toast } from "toastify-react-native";
 
 export default function EditPage() {
   const { id } = useLocalSearchParams<{ id: string; }>();
-  const router = useRouter();
   const { data, isLoading } = useBooks({ params: [id] });
 
   if (isLoading) {
@@ -22,7 +21,12 @@ export default function EditPage() {
   return (
     <CreateBookForm
       onSuccess={() => {
-        router.goBackAndReload();
+        router.back()
+        Toast.show({ 
+          type: "success",
+          text1: "book succsesfully created",
+          text2: "the book has been succsesfully created"
+        })
       }}
     />
   );

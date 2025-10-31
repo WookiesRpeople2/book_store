@@ -1,6 +1,6 @@
 import { Pressable, TouchableOpacity } from 'react-native';
 import { Plus } from 'lucide-react-native';
-import { useRouter } from '@/hooks/useRouter';
+import { useRouter } from 'expo-router';
 
 export const FloatingAddButton = () => {
   const router = useRouter();

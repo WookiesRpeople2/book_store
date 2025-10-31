@@ -2,20 +2,17 @@ import { UpdateBookForm } from "@/components/form/updateBookForm";
 import { useBooks } from "@/hooks/books/useBooks";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Text } from "react-native";
-
-
+import { Toast } from "toastify-react-native";
 
 export default function EditPage() {
   const { id } = useLocalSearchParams<{ id: string; }>();
-  const router = useRouter();
   const { data, isLoading } = useBooks({ params: [id] });
+  const router = useRouter()
 
   if (isLoading) {
     return <Text>Loading</Text>;
   }
   
-  console.log(data)
-
   if (!data) {
     throw new Error("Could not find book");
   }
@@ -24,7 +21,12 @@ export default function EditPage() {
     <UpdateBookForm
       book={data}
       onSuccess={() => {
-        router.back();
+        router.back()        
+        Toast.show({ 
+          type: "success",
+          text1: "book succsesfully updated",
+          text2: "the book has been succsesfully updated"
+        })
       }}
     />
   );

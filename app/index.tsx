@@ -2,15 +2,25 @@ import { FloatingAddButton } from "@/components/button/floatingAddButton";
 import { BooksHero } from "@/components/hero/booksHero";
 import { BookCardSkeleton } from "@/components/loaders/bookCardSkelaton";
 import { BookListSection } from "@/components/sections/bookListSection";
+import { BOOKS_API_BOOK_ENDPOINT } from "@/constants";
 import { useBooks } from "@/hooks/books/useBooks";
-import { useRouter } from "@/hooks/useRouter";
+import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
 import { Book } from "@/types";
+import { useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "expo-router";
 import { TrendingUp } from "lucide-react-native";
+import { Fragment } from "react";
 import { ScrollView} from "react-native";
 
 export default function Index() {
-  const { data, isLoading } = useBooks<Book[]>();
+  const { data, isLoading, refetch } = useBooks<Book[]>();
+  const queryClient = useQueryClient();
   const router = useRouter()
+  useRefreshOnFocus({
+    onRefresh: refetch,
+    refetchOnFocus: true,
+    goBack: false
+  });
 
   const handleBookPress = ({id}: Book) => {
     router.push({pathname:"/books/[id]",  params: {id}})
@@ -23,9 +33,6 @@ export default function Index() {
   if(!data){
     throw new Error("Could not fetch data")
   }
-
-  console.log(data)
-  
 
   return (
     <>  

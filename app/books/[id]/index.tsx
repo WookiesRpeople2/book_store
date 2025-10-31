@@ -4,61 +4,78 @@ import { BookDetailsCard } from "@/components/card/bookDetailsCard";
 import { BookHero } from "@/components/hero/bookHero";
 import { BookTitleSection } from "@/components/sections/bookTitleSection";
 import { useBooks } from "@/hooks/books/useBooks";
-import { useLocalSearchParams} from "expo-router";
+import { useLocalSearchParams, useRouter} from "expo-router";
 import { Edit, Trash2 } from "lucide-react-native";
 import { Text } from "react-native";
 import { ScrollView, View } from "react-native";
 import { Button } from "@/components/ui/button";
 import { DeleteAlerte } from "@/components/alert/deleteAlerte";
-import { useRouter } from "@/hooks/useRouter";
-import { FloatingAddButton } from "@/components/button/floatingAddButton";
+import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
+import { Toast } from "toastify-react-native";
+import { Notes } from "@/types";
 
 
 export default function Index() {
   const { id } = useLocalSearchParams<{ id: string; }>();
-  const { data, isLoading } = useBooks({ params: [id] });
-  const {mutate} = useBooks({method: "DELETE", params: [id]})
+  const { data: bookData, isLoading: bookLoading, refetch: refetchBooks } = useBooks({ params: [id] });
+  const { data: noteData, isLoading: noteLoading, refetch: refetchNotes } = useBooks<Notes[]>({ params: [id, "notes"] });
+  const {mutateAsync, isPending} = useBooks({method: "DELETE", params: [id]})
+  const { trigger } = useRefreshOnFocus({
+    onRefresh: ()=>{
+      refetchBooks()
+      return refetchNotes()
+    },
+    refetchOnFocus: true,
+  });
   const router = useRouter()
 
   const handleOnBack = () => {
-    router.goBackAndReload()    
+    trigger()
   };
 
-  const handleOnDelete = () => {
-    mutate({})
-    router.goBackAndReload()
+  const handleOnDelete = async () => {
+    await mutateAsync({})
+    if(!isPending){
+      trigger()
+      Toast.show({ 
+        type: "success",
+        text1: "book succsesfully deleted",
+        text2: "the book has been succsesfully deleted"
+      })
+    }
   };
 
   const handleOnEdit = () => {
     router.push({pathname: "/books/[id]/edit", params:{id}})
   };
 
-  if (isLoading) {
+  if (bookLoading || noteLoading) {
     return <Text>Loading</Text>;
   }
 
-  if (!data) {
+  if (!bookData || !noteData) {
     throw new Error("Could not find book");
   }
 
   return (
     <ScrollView className="flex-1 bg-gray-50">
-      <BookHero cover={data.cover} onBack={handleOnBack} />
+      <BookHero cover={bookData.cover} onBack={handleOnBack} />
 
       <View className="mt-24 px-6 pb-8">
         <View className="flex-row justify-center gap-3 mb-6">
-          <FavoriteBage favorite={data.favorite} />
-          <ReadBadge read={data.read} />
+          <FavoriteBage favorite={bookData.favorite} />
+          <ReadBadge read={bookData.read} />
         </View>
         <BookTitleSection
-          name={data.name}
-          author={data.author}
-          rating={data.rating}
+          name={bookData.name}
+          author={bookData.author}
+          rating={bookData.rating}
         />
         <BookDetailsCard
-          editor={data.editor}
-          year={data.year}
-          theme={data.theme}
+          editor={bookData.editor}
+          year={bookData.year}
+          theme={bookData.theme}
+          notes={noteData}
         />
       </View>
 <View className="flex-row gap-4">
