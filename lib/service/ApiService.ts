@@ -46,7 +46,7 @@ export class ApiService {
   ): Promise<ApiResponse<T>> {
     const isBody = this.isBodyMethod(method);
 
-    const url = this.buildURL(endpoint, isBody ? undefined : params);
+    const url = this.buildURL(endpoint, params ? params : undefined);
 
     const options: RequestInit = {
       method,

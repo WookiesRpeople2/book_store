@@ -12,12 +12,14 @@ export const createApiHook = <TData, TVariables = void>(endpoint: string) => {
   return ({
     method = "GET",
     params,
+    enabled = true,
     mutationOptions,
   }: ApiHookConfig<TData, TVariables> = {} as ApiHookConfig<TData, TVariables>) => {
     return useApi<TData, TVariables>({
       endpoint,
       method,
       params,
+      enabled,
       mutationOptions,
     }) as UseQueryResult<TData> & UseMutationResult;
   };

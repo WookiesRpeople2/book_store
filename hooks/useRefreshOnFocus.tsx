@@ -6,19 +6,14 @@ import { AppState } from 'react-native';
 type UseRefreshOptions = {
   onRefresh: () => Promise<QueryObserverResult> | Promise<void>;
   refetchOnFocus: boolean;
-  goBack?: boolean;
 };
 
 export const useRefreshOnFocus = ({
   onRefresh,
   refetchOnFocus = true,
-  goBack = true
 }: UseRefreshOptions) => {
   const router = useRouter();
   const trigger = useCallback(async () => {
-    if (router.canGoBack() && goBack) {
-      router.back();
-    }
     await onRefresh();
   }, [onRefresh]);
 

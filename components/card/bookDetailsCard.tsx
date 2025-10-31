@@ -11,9 +11,11 @@ type Props = {
   year: number;
   theme: string;
   notes: Notes[]
+  handleNoteCreated?: (noteText: string) => void;
+  isPending?: boolean;
 };
 
-export const BookDetailsCard: FC<Props> = ({ editor, year, theme, notes }) => {
+export const BookDetailsCard: FC<Props> = ({ editor, year, theme, notes, handleNoteCreated, isPending }) => {
   return (
     <View>
     <View className="bg-white rounded-2xl shadow-lg p-6 mb-6">
@@ -46,7 +48,7 @@ export const BookDetailsCard: FC<Props> = ({ editor, year, theme, notes }) => {
         />
       </View>
     </View>
-      <NotesAccordion notes={notes}/>
+      <NotesAccordion notes={notes} handleNoteCreated={handleNoteCreated} isPending={isPending}/>
     </View>
   );
 };

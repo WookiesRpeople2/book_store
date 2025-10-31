@@ -25,6 +25,7 @@ export type ApiHookConfig<TData, TVariables> = {
   endpoint?: string;
   method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
   params?: Params;
+  enabled?: boolean;
   mutationOptions?: UseMutationOptions<ApiResponse<TData>, Error, TVariables>;
 };
 
@@ -35,6 +36,9 @@ export type Err = {
   message: string;
 };
 
+
+export type FilterType = "all" | "read" | "unread" | "favorite";
+export type SortType = "title" | "author" | "theme";
 
 //ApiResponse
 export type Book = {
@@ -54,4 +58,4 @@ export type Notes = {
   bookId: number;
   content: string;
   dateISO: Date;
-}
+};
