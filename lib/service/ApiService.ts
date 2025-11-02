@@ -1,4 +1,4 @@
-import { ApiRequestConfig, ApiResponse, Err } from "@/types";
+import { ApiRequestConfig, ApiResponse, Params } from "@/types";
 
 export class ApiService {
   private baseURL: string;
@@ -21,12 +21,10 @@ export class ApiService {
       headers = {},
     } = config;
 
-    const httpMethod = this.determineMethod(method, data, params);
-
     try {
       const response = await this.executeRequest<T>(
         endpoint,
-        httpMethod,
+        method,
         params,
         data,
         headers,
@@ -34,7 +32,7 @@ export class ApiService {
 
       return response;
     } catch (error) {
-      const err = error as Err
+      const err = error as {message: string};
       throw new Error(err.message);
     }
   }
@@ -42,11 +40,11 @@ export class ApiService {
   private async executeRequest<T>(
     endpoint: string,
     method: string,
-    params?: Record<string, any>,
+    params?: Params,
     data?: any,
     headers: Record<string, string> = {},
   ): Promise<ApiResponse<T>> {
-    const url = this.buildURL(endpoint, this.isBodyMethod(method) ? params : params || data);
+    const url = this.buildURL(endpoint, params ? params : undefined);
 
     const options: RequestInit = {
       method,
@@ -55,18 +53,17 @@ export class ApiService {
         ...headers,
       },
     };
-    
-    if (this.isBodyMethod(method) && (data || (params && data))) {
-      options.body = JSON.stringify(data || params);
+
+    if (data) {
+      options.body = JSON.stringify(data);
     }
 
     try {
       const response = await fetch(url, options);
-
       const responseData = await response.json();
 
       if (!response.ok) {
-        throw new Error(responseData.error);
+        throw new Error(responseData.error || `HTTP ${response.status}`);
       }
 
       return {
@@ -77,30 +74,37 @@ export class ApiService {
         timestamp: Date.now(),
       };
     } catch (error) {
-      const err = error as Err;
+      const err = error as {message: string};
       throw new Error(err.message);
     }
   }
 
-  private buildURL(endpoint: string, params?: Record<string, any>): string {
+  private buildURL(endpoint: string, params?: (string | number)[] | Record<string, any>): string {
     const path = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
-    const url = `${this.baseURL}${path}`;
+    let url = `${this.baseURL}${path}`;
 
-    if (!params || Object.keys(params).length === 0) {
+    if (!params) {
       return url;
+    }
+
+    if (Array.isArray(params)) {
+      const joined = params
+        .filter((p) => p !== undefined && p !== null)
+        .map((p) => encodeURIComponent(String(p)))
+        .join('/');
+      return url.endsWith('/') ? `${url}${joined}` : `${url}/${joined}`;
     }
 
     const searchParams = new URLSearchParams();
     Object.entries(params).forEach(([key, value]) => {
       if (value !== undefined && value !== null) {
-        searchParams.append(key, String(value));
+        searchParams.append(key, encodeURIComponent(value));
       }
     });
 
-    const queryString = searchParams.toString();
-    return queryString ? `${url}?${queryString}` : url;
+    const query = searchParams.toString();
+    return query ? `${url}?${query}` : url;
   }
-
 
   private parseHeaders(headers: Headers): Record<string, string> {
     const result: Record<string, string> = {};
@@ -110,31 +114,10 @@ export class ApiService {
     return result;
   }
 
-  private determineMethod(
-    method?: string,
-    data?: any,
-    params?: Record<string, any>
-  ): string {
-    if (method) return method.toUpperCase();
-
-    if (data) {
-      if (data.id || data._id) {
-        return 'PUT';
-      }
-      return 'POST';
-    }
-
-    if (params?.action === 'delete' || params?.delete) {
-      return 'DELETE';
-    }
-
-    return 'GET';
-  }
-
   private isBodyMethod(method: string): boolean {
-    return ['POST', 'PUT', 'PATCH'].includes(method.toUpperCase());
+    return ['POST'].includes(method.toUpperCase());
   }
-  
+
 
   //methods for explicit use cases
   async get<T>(endpoint: string, params?: Record<string, any>): Promise<ApiResponse<T>> {

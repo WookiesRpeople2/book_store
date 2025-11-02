@@ -1,50 +1,58 @@
-# Welcome to your Expo app 👋
+#Tech stack:
+react ruseables
+TanStack Query
+react native
+expo
+nativewind
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+#Justifications
+1. React Reusables
+J’ai choisi d’utiliser des composants réutilisables React afin de favoriser la modularité et la maintenabilité du code. Cela permet de réduire la duplication de code, d’assurer une cohérence visuelle et fonctionnelle dans toute l’application, et de faciliter les évolutions futures.
 
-## Get started
+2. TanStack Query
+TanStack Query (anciennement React Query) a été utilisé pour la gestion des données asynchrones. Cette bibliothèque simplifie la récupération, la mise en cache et la synchronisation des données avec le backend, ce qui améliore la performance et l’expérience utilisateur sans avoir à gérer manuellement des états complexes de chargement ou d’erreurs.
 
-1. Install dependencies
+3. React Context
+J’ai intégré React Context pour la gestion de l’état global de l’application. Cela permet de partager des données entre différents composants sans avoir besoin de prop drilling, ce qui rend le code plus lisible et plus facile à maintenir.
 
-   ```bash
-   npm install
-   ```
+4. NativeWind
+NativeWind a été utilisé pour le styling en React Native. Cette bibliothèque permet d’appliquer des classes utilitaires similaires à Tailwind CSS, ce qui accélère le développement des interfaces tout en assurant une cohérence visuelle et une personnalisation facile.
 
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+#Lancer la projet
+```
+npx expo start
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
 
-## Learn more
+#if problems with metro
+make a metro.config.js file and place this code inside
+```
+const { getDefaultConfig } = require('expo/metro-config');
+const { withNativeWind } = require('nativewind/metro');
+ 
+const config = getDefaultConfig(__dirname);
+ 
+module.exports = withNativeWind(config, { input: 'assets/global.css', inlineRem: 16 });
+```
+```
+```
+```
+```
 
-To learn more about developing your project with Expo, look at the following resources:
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+• Afficher la liste des livres (GET /books).✓
+• Ajouter un livre (POST /books).✓
+• Modifier un livre (PUT /books/:id).✓
+• Supprimer un livre (DELETE /books/:id).✓
+• Changer le statut “lu / non lu”.✓
+• Navigation entre écrans ✓
+• Notes liées à un livre ( ) -> Affichage sur Details✓
+• Favoris✓
+• UI améliorée✓
+• Rating ✓
+• Recherche / filtrage✓
+• Couverture photo✓
+• Persistance locale (mode offline)✓
+• Statistiques / Dashboard✓
+• Intégration de l’API OpenLibrary✓
+• Thèmes personnalisables (mode clair/sombre)✓

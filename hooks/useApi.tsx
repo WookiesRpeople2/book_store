@@ -1,37 +1,46 @@
-import { useMutation, useQuery, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
-import { ApiService } from '@/service/ApiService';
+import { useMutation, UseMutationResult, useQuery, UseQueryResult, useSuspenseQuery } from '@tanstack/react-query';
+import { ApiService } from '@/lib/service/ApiService';
 import { ApiHookConfig, ApiResponse } from '@/types';
-import { API } from '@/constants';
-
-const apiService = new ApiService(API);
 
 export const useApi = <TData, TVariables>({
+  api,
   endpoint,
-  method = "GET",
+  method,
   params,
-  data,
-  queryOptions,
+  enabled,
   mutationOptions,
 }: ApiHookConfig<TData, TVariables>) => {
-  const httpMethod = method ? method.toUpperCase() : undefined;
-
-  if (httpMethod === 'GET' || (!httpMethod && !data)) {
-    return useQuery({
+  const apiService = new ApiService(api ?? "");
+  const httpMethod = method!.toUpperCase();
+  
+  if (httpMethod == "GET") {
+    return useQuery<TData>({
       queryKey: [endpoint, params],
-      queryFn: () => apiService.request<TData>({ endpoint, method: 'GET', params }),
-      ...queryOptions,
+      queryFn: async () => {
+        const res: ApiResponse<TData> = await apiService.request<TData>({
+          endpoint: endpoint ?? "",
+          method: httpMethod,
+          params,
+        });
+        return (res.data ?? res) as TData;
+      },
+      enabled,
     });
   }
 
   return useMutation<ApiResponse<TData>, Error, TVariables>({
-    mutationFn: (variables: TVariables) =>
-      apiService.request<TData>({
-        endpoint,
+    mutationFn: (variables: TVariables) => {
+      const requestData = variables;
+      return apiService.request<TData>({
+        endpoint: endpoint ?? "",
         method: httpMethod,
         params,
-        data: variables || data,
-      }),
+        data: requestData,
+      });
+    },
     ...mutationOptions,
   });
 }
+
+
 
