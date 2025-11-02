@@ -10,7 +10,7 @@ type Props = {
 
 export const BookTitleSection: FC<Props> = ({ name, author, rating }) => {
   return (
-    <View className="items-center mb-8">
+    <View className="items-center mb-8 bg-white rounded-md">
       <Text className="text-4xl font-bold text-gray-900 text-center mb-3">
         {name}
       </Text>

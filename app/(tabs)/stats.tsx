@@ -18,7 +18,7 @@ export default function Stats() {
   const totalBooksX = Array.from({ length: data.totalBooks }, (_, i) => i + 1);
   const totalBooksY = totalBooksX.map(x => x); 
   return (
-    <ScrollView className="flex-1 bg-gray-50 p-4">
+    <ScrollView className="flex-1 p-4">
       <Text className="text-3xl font-bold text-center text-gray-800 mb-6">
         Book Dashboard
       </Text>

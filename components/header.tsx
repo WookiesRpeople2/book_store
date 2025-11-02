@@ -1,7 +1,8 @@
 import { FC, PropsWithChildren, ReactNode } from "react";
-import { Text, View } from "react-native";
-import { Button } from "./ui/button";
+import { View } from "react-native";
 import { Separator } from "./ui/separator";
+import { Text } from "./ui/text";
+import { useTheme } from "@/hooks/useTheme"; 
 
 type Props = {
   title: string;
@@ -12,31 +13,23 @@ type Props = {
 export const Header: FC<PropsWithChildren<Props>> = ({
   title,
   icon,
-  children
-}) => (
-  <View className="px-6 mb-4">
-    <View className="flex-row items-center justify-between mb-2">
-      <View className="flex-row items-center">
-        {icon && <View className="mr-2">{icon}</View>}
-        <Text className="text-2xl font-bold text-gray-900">{title}</Text>
-      </View>
-        {children}
-    </View>
-    <Separator className="bg-gray-200" />
-  </View>
-);
+  children,
+}) => {
+  const { isDarkColorScheme } = useTheme();
+  const textColor = isDarkColorScheme ? "text-white" : "text-black";
+  const separatorColor = isDarkColorScheme ? "bg-gray-700" : "bg-gray-200";
 
-// {showSeeAll && (
-//         <Button
-//           variant="ghost"
-//           size="sm"
-//           onPress={onSeeAllPress}
-//           className="flex-row items-center"
-//         >
-//           <Text className="text-sm text-amber-700 font-medium mr-1">
-//             See All
-//           </Text>
-//           <ChevronRight size={16} color="#b45309" />
-//         </Button>
-//       )}
+  return (
+    <View className="px-6 mb-4">
+      <View className="flex-row items-center justify-between mb-2">
+        <View className="flex-row items-center">
+          {icon && <View className="mr-2">{icon}</View>}
+          <Text className={`text-2xl ${textColor}`}>{title}</Text>
+        </View>
+        {children}
+      </View>
+      <Separator className={separatorColor} />
+    </View>
+  );
+};
 

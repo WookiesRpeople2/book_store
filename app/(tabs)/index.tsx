@@ -7,6 +7,7 @@ import { BookListSection } from "@/components/sections/bookListSection";
 import { useBookFilters } from "@/hooks/books/useBookFilter";
 import { useBooks } from "@/hooks/books/useBooks";
 import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
+import { useTheme } from "@/hooks/useTheme";
 import { Book } from "@/types";
 import { useRouter } from "expo-router";
 import { TrendingUp } from "lucide-react-native";

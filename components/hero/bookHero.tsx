@@ -1,6 +1,5 @@
-import { ArrowLeft } from "lucide-react-native";
 import { FC } from "react";
-import { Pressable, View } from "react-native";
+import { View } from "react-native";
 import { Image } from "../image";
 
 type Props = {

@@ -1,6 +1,17 @@
 import { FC } from "react";
-import { Dimensions, View, Text } from "react-native";
-import { LineChart, BarChart, PieChart } from "react-native-chart-kit";
+import {
+  BarChart as ReBarChart,
+  Bar,
+  LineChart as ReLineChart,
+  Line,
+  PieChart as RePieChart,
+  Pie,
+  Cell,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 
 type ChartType = "bar" | "line" | "pie" | "progress";
 
@@ -21,87 +32,85 @@ export const StatsChart: FC<StatsChartProps> = ({
   color = "#2563EB",
   maxValue = 100,
 }) => {
-  const width = Dimensions.get("window").width * 0.9;
+  const width = "100%";
   const height = 220;
 
-  const chartConfig = {
-    backgroundColor: "#ffffff",
-    backgroundGradientFrom: "#ffffff",
-    backgroundGradientTo: "#ffffff",
-    decimalPlaces: 0,
-    color: (opacity = 1) => color,
-    labelColor: (opacity = 1) => `rgba(0,0,0,${opacity})`,
-    propsForDots: { r: "6", strokeWidth: "2", stroke: "#fff" },
-  };
+  const data =
+    labels.length > 0
+      ? labels.map((label, i) => ({ label, value: values[i] }))
+      : values.map((v, i) => ({ label: "", value: v }));
+
+  const pieData = labels.map((label, i) => ({
+    name: label,
+    value: values[i],
+  }));
+
+  const pieColors = ["#2563EB", "#16A34A", "#F59E0B", "#7C3AED"];
 
   return (
-    <View className="m-3 bg-white p-4 rounded-2xl shadow-md">
-      <Text className="text-lg font-bold mb-3">{title}</Text>
+    <div className="m-3 bg-white p-4 rounded-2xl shadow-md">
+      <h2 className="text-lg font-bold mb-3">{title}</h2>
 
       {type === "bar" && (
-        <BarChart
-          data={{ labels: labels.length ? labels : values.map((_, i) => ""), datasets: [{ data: values }] }}
-          width={width}
-          height={height}
-          fromZero
-          showValuesOnTopOfBars
-          yAxisLabel=""
-          yAxisSuffix=""
-          chartConfig={chartConfig}
-          style={{ borderRadius: 16 }}
-        />
+        <ResponsiveContainer width={width} height={height}>
+          <ReBarChart data={data}>
+            <XAxis dataKey="label" />
+            <YAxis />
+            <Tooltip />
+            <Bar dataKey="value" fill={color} />
+          </ReBarChart>
+        </ResponsiveContainer>
       )}
 
       {type === "line" && (
-        <LineChart
-          data={{ labels: labels.length ? labels : values.map(() => ""), datasets: [{ data: values }] }}
-          width={width}
-          height={height}
-          fromZero
-          yAxisLabel=""
-          yAxisSuffix=""
-          chartConfig={chartConfig}
-          bezier={false}
-          withDots={true}
-          withVerticalLabels={false} // hide labels
-          withHorizontalLabels={true}
-          style={{ borderRadius: 16 }}
-        />
+        <ResponsiveContainer width={width} height={height}>
+          <ReLineChart data={data}>
+            <XAxis dataKey="label" hide />
+            <YAxis />
+            <Tooltip />
+            <Line
+              type="monotone"
+              dataKey="value"
+              stroke={color}
+              dot={{ r: 4 }}
+            />
+          </ReLineChart>
+        </ResponsiveContainer>
       )}
 
       {type === "pie" && (
-        <PieChart
-          data={labels.map((label, i) => ({
-            name: label,
-            population: values[i],
-            color: ["#2563EB", "#16A34A", "#F59E0B", "#7C3AED"][i % 4],
-            legendFontColor: "#000",
-            legendFontSize: 14,
-          }))}
-          width={width}
-          height={height}
-          chartConfig={chartConfig}
-          accessor="population"
-          backgroundColor="transparent"
-          paddingLeft="15"
-          absolute
-        />
+        <ResponsiveContainer width={width} height={height}>
+          <RePieChart>
+            <Pie
+              data={pieData}
+              dataKey="value"
+              nameKey="name"
+              outerRadius={80}
+              label
+            >
+              {pieData.map((_, i) => (
+                <Cell key={i} fill={pieColors[i % pieColors.length]} />
+              ))}
+            </Pie>
+            <Tooltip />
+          </RePieChart>
+        </ResponsiveContainer>
       )}
 
       {type === "progress" && (
-        <View className="flex-1 justify-center items-center" style={{ width, height }}>
-          <Text className="text-4xl font-extrabold text-gray-800">
+        <div className="flex flex-col justify-center items-center" style={{ height }}>
+          <p className="text-4xl font-extrabold text-gray-800">
             {values[0]} / {maxValue}
-          </Text>
-          <View className="w-full bg-gray-200 rounded-full h-6 mt-4">
-            <View
+          </p>
+          <div className="w-full bg-gray-200 rounded-full h-6 mt-4">
+            <div
               className="bg-green-400 h-6 rounded-full"
               style={{ width: `${(values[0] / maxValue) * 100}%` }}
             />
-          </View>
-        </View>
+          </div>
+        </div>
       )}
-    </View>
+    </div>
   );
 };
 

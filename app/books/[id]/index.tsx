@@ -74,7 +74,7 @@ export default function Index() {
   }
 
   return (
-    <ScrollView className="flex-1 bg-gray-50">
+    <ScrollView className="flex-1">
       <BookHero cover={bookData.cover} onBack={handleOnBack} />
 
       <View className="mt-24 px-6 pb-8">

@@ -53,7 +53,7 @@ export const BookDetailsCard: FC<Props> = ({ editor, year, theme, notes, numEdit
             icon={<ClipboardList size={22} color="#14B8A6" />}
             iconBgColor="bg-teal-50"
             label="Number of editions"
-            customValue={numEditions.toString()}
+            value={numEditions.toString()}
           />
         </View>
       </View>

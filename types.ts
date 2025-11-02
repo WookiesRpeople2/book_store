@@ -30,11 +30,12 @@ export type ApiHookConfig<TData, TVariables> = {
   mutationOptions?: UseMutationOptions<ApiResponse<TData>, Error, TVariables>;
 };
 
-export type Err = {
-  status: number;
-  statusText: string;
-  data: any;
-  message: string;
+export type ThemeContextType = {
+  colorScheme: 'light' | 'dark';
+  setColorScheme: (scheme: 'light' | 'dark') => void;
+  toggleColorScheme: () => void;
+  isDarkColorScheme: boolean;
+  isLoading: boolean;
 };
 
 

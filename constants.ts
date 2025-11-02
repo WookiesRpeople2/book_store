@@ -7,3 +7,5 @@ export const STORAGE_KEY = 'REACT_QUERY_OFFLINE_CACHE';
 const CORS_PROXY = process.env.NODE_ENV === 'development' ? 'https://corsproxy.io/?': '';
 export const OPEN_LIB_API = `${CORS_PROXY}https://openlibrary.org`;
 export const OPEN_LIB_STATS_ENDPOINT = "/search.json";
+
+export const THEME_STORAGE_KEY = '@app_theme';

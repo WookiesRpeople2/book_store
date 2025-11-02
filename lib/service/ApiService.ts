@@ -1,4 +1,4 @@
-import { ApiRequestConfig, ApiResponse, Err, Params } from "@/types";
+import { ApiRequestConfig, ApiResponse, Params } from "@/types";
 
 export class ApiService {
   private baseURL: string;
@@ -32,7 +32,7 @@ export class ApiService {
 
       return response;
     } catch (error) {
-      const err = error as Err;
+      const err = error as {message: string};
       throw new Error(err.message);
     }
   }
@@ -74,7 +74,7 @@ export class ApiService {
         timestamp: Date.now(),
       };
     } catch (error) {
-      const err = error as Err;
+      const err = error as {message: string};
       throw new Error(err.message);
     }
   }

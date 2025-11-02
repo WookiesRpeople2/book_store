@@ -24,7 +24,7 @@ export const DraggableStarRating = ({
 
   const updateRatingFromPosition = (x: number) => {
     let newRating = x / starSize;
-    newRating = Math.min(maxStars, Math.max(0, Math.round(newRating * 2) / 2));
+    newRating = Math.min(maxStars, Math.max(0, newRating));
     onRatingChange(newRating);
   };
 
@@ -32,7 +32,7 @@ export const DraggableStarRating = ({
     <View {...panResponder.panHandlers} style={{ flexDirection: 'row', paddingVertical: 8 }}>
       {Array.from({ length: maxStars }, (_, i) => {
         const starNumber = i + 1;
-        let iconName: ComponentProps<typeof Ionicons>['name']  = 'star-outline';
+        let iconName: ComponentProps<typeof Ionicons>['name'] = 'star-outline';
 
         if (rating >= starNumber) {
           iconName = 'star';
