@@ -1,6 +1,9 @@
 import { useMutation, UseMutationResult, useQuery, UseQueryResult, useSuspenseQuery } from '@tanstack/react-query';
-import { apiService, ApiService } from '@/lib/service/ApiService';
+import { ApiService } from '@/lib/service/ApiService';
 import { ApiHookConfig, ApiResponse } from '@/types';
+import { API } from '@/constants';
+
+export const apiService = new ApiService(API);
 
 export const useApi = <TData, TVariables>({
   endpoint,

@@ -59,3 +59,11 @@ export type Notes = {
   content: string;
   dateISO: Date;
 };
+
+export type Stats = {
+  totalBooks: number;
+  readCount: number;
+  unreadCount: number;
+  favoritesCount: number;
+  averageRating: number;
+};

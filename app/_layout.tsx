@@ -56,7 +56,7 @@ const Content = () => {
   useEffect(() => {
     const unsubscribe = setupNetworkListener();
     return () => unsubscribe();
-  }, []); 
+  }, []);
 
   return (
     <>
@@ -65,8 +65,8 @@ const Content = () => {
       <ErrorBoundary FallbackComponent={({ error }) => (
         <ErrorAlert message={error.message} />
       )}>
-        <Stack screenOptions={{ headerShown: false }} />
         <BackArrow />
+        <Stack screenOptions={{ headerShown: false }} />
       </ErrorBoundary>
       <PortalHost />
     </>
@@ -80,8 +80,14 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={NAV_THEME[colorScheme]}>
-      <PersistQueryClientProvider client={queryClient}  persistOptions={{ persister: asyncStoragePersister }} onSuccess={()=>setIsHydrated(true)}>
-      {isHydrated ? <Content /> : null}
+      <PersistQueryClientProvider client={queryClient} persistOptions={{
+        persister: asyncStoragePersister, dehydrateOptions: {
+          shouldDehydrateQuery: (query) => {
+            return query.state.status !== 'pending';
+          },
+        },
+      }} onSuccess={() => setIsHydrated(true)}>
+        {isHydrated ? <Content /> : null}
       </PersistQueryClientProvider>
     </ThemeProvider >
   );
