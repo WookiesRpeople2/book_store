@@ -16,13 +16,14 @@ import { Book, Notes } from "@/types";
 import { BOOKS_API_BOOK_ENDPOINT } from "@/constants";
 import { useOpenLib } from "@/hooks/openLib/useOpenLib";
 import { queryClient } from "@/app/_layout";
+import { LoadingSpinner } from "@/components/loaders/loadingSpinner";
 
 
 export default function Index() {
   const { id } = useLocalSearchParams<{ id: string; }>();
   const { data: bookData, isLoading: bookLoading, refetch: refetchBooks } = useBooks({ params: [id] });
   const { data: noteData, isLoading: noteLoading, refetch: refetchNotes } = useBooks<Notes[]>({ params: [id, "notes"] });
-  const { data: openLibData, isLoading: openLibLoading } = useOpenLib({ params: { title: bookData?.name || '', fields: "edition_count"}, enabled: !!bookData?.name });
+  const { data: openLibData, isLoading: openLibLoading } = useOpenLib({ params: { title: bookData?.name || '', fields: "edition_count" }, enabled: !!bookData?.name });
   const { mutate: mutateDelete } = useBooks({ method: "DELETE", params: [id], mutationOptions: { onSuccess: () => queryClient.invalidateQueries({ queryKey: [BOOKS_API_BOOK_ENDPOINT] }) } });
   const { mutateAsync: mutateCreate, isPending: isPendingCreate } = useBooks<Notes>({ method: "POST", params: [id, "notes"] });
   const { trigger } = useRefreshOnFocus({
@@ -66,7 +67,7 @@ export default function Index() {
   };
 
   if (bookLoading || noteLoading || openLibLoading) {
-    return <Text>Loading</Text>;
+    return <LoadingSpinner/>;
   }
 
   if (!bookData || !noteData) {

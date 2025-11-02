@@ -1,4 +1,5 @@
 import { CreateBookForm } from "@/components/form/creatBookForm";
+import { LoadingSpinner } from "@/components/loaders/loadingSpinner";
 import { useBooks } from "@/hooks/books/useBooks";
 import { router, useLocalSearchParams } from "expo-router";
 import { Text } from "react-native";
@@ -9,7 +10,7 @@ export default function EditPage() {
   const { data, isLoading } = useBooks({ params: [id] });
 
   if (isLoading) {
-    return <Text>Loading</Text>;
+    return <LoadingSpinner />;
   }
 
 

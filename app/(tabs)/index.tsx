@@ -1,13 +1,12 @@
 import { FloatingAddButton } from "@/components/button/floatingAddButton";
 import { BooksHero } from "@/components/hero/booksHero";
-import { BookCardSkeleton } from "@/components/loaders/bookCardSkelaton";
+import { LoadingSpinner } from "@/components/loaders/loadingSpinner";
 import { BookFilters } from "@/components/search/bookFilter";
 import { SearchBar } from "@/components/search/searchBar";
 import { BookListSection } from "@/components/sections/bookListSection";
 import { useBookFilters } from "@/hooks/books/useBookFilter";
 import { useBooks } from "@/hooks/books/useBooks";
 import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
-import { useTheme } from "@/hooks/useTheme";
 import { Book } from "@/types";
 import { useRouter } from "expo-router";
 import { TrendingUp } from "lucide-react-native";
@@ -22,11 +21,6 @@ export default function Index() {
     refetchOnFocus: true,
   });
 
-  console.log('[INDEX] Query state:', { 
-    isLoading, 
-    hasData: !!data,
-    dataLength: data?.length 
-  });
 
   const handleBookPress = ({ id }: Book) => {
     router.push({ pathname: "/books/[id]", params: { id } });
@@ -34,7 +28,7 @@ export default function Index() {
 
 
   if (isLoading) {
-    return <BookCardSkeleton />;
+    return <LoadingSpinner />;
   }
 
   if (!data) {
