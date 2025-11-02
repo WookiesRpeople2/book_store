@@ -1,9 +1,6 @@
 import { useMutation, UseMutationResult, useQuery, UseQueryResult, useSuspenseQuery } from '@tanstack/react-query';
-import { ApiService } from '@/lib/service/ApiService';
+import { apiService, ApiService } from '@/lib/service/ApiService';
 import { ApiHookConfig, ApiResponse } from '@/types';
-import { API } from '@/constants';
-
-const apiService = new ApiService(API);
 
 export const useApi = <TData, TVariables>({
   endpoint,
@@ -13,7 +10,7 @@ export const useApi = <TData, TVariables>({
   mutationOptions,
 }: ApiHookConfig<TData, TVariables>) => {
   const httpMethod = method!.toUpperCase();
-
+  
   if (httpMethod == "GET") {
     return useQuery<TData>({
       queryKey: [endpoint, params],
@@ -23,17 +20,15 @@ export const useApi = <TData, TVariables>({
           method: httpMethod,
           params,
         });
-
         return res.data;
       },
-      enabled
+      enabled,
     });
   }
 
   return useMutation<ApiResponse<TData>, Error, TVariables>({
     mutationFn: (variables: TVariables) => {
       const requestData = variables;
-      console.log("variables received in mutationFn:", variables);
       return apiService.request<TData>({
         endpoint: endpoint ?? "",
         method: httpMethod,

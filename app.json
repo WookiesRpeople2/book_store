@@ -38,13 +38,13 @@
           "dark": {
             "backgroundColor": "#000000"
           }
-        },
-         [
+        }
+      ],
+      [
         "expo-image-picker",
         {
           "photosPermission": "The app accesses your photos in order to upload books"
         }
-      ]
       ]
     ],
     "experiments": {
@@ -53,3 +53,4 @@
     }
   }
 }
+

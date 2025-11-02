@@ -14,11 +14,17 @@ import { ScrollView, View } from "react-native";
 
 export default function Index() {
   const { filter, sort, params, handleFilterChange } = useBookFilters();
-  const { data, isLoading, refetch } = useBooks<Book[]>({params});
+  const { data, isLoading, refetch } = useBooks<Book[]>({ params });
   const router = useRouter();
   useRefreshOnFocus({
     onRefresh: refetch,
     refetchOnFocus: true,
+  });
+
+  console.log('[INDEX] Query state:', { 
+    isLoading, 
+    hasData: !!data,
+    dataLength: data?.length 
   });
 
   const handleBookPress = ({ id }: Book) => {

@@ -4,6 +4,7 @@ import { useForm } from '@tanstack/react-form';
 import {DraggableStarRating} from './fields/draggableStars';
 import type { Book } from '@/types';
 import {FieldInfo} from './fields/fieldInfo'; 
+import { ImageSelecter } from '../imagePicker';
 
 
 export const BookFormView = ({
@@ -124,14 +125,8 @@ export const BookFormView = ({
         children={(field) => (
           <View className="mb-4">
             <Text className="text-sm font-semibold mb-2">Cover URL</Text>
-            <TextInput
-              className="border border-gray-300 rounded-lg p-3 text-base"
-              value={field.state.value}
-              onChangeText={field.handleChange}
-              onBlur={field.handleBlur}
-              placeholder="Enter cover image URL"
-            />
-          </View>
+              <ImageSelecter value={field.state.value} onChange={field.handleChange}/>
+            </View>
         )}
       />
 

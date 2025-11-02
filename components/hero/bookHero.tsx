@@ -17,13 +17,6 @@ export const BookHero: FC<Props> = ({ cover, onBack }) => (
         resizeMode="cover"
       />
       <View className="absolute inset-0 bg-black/40" />
-
-      <Pressable
-        onPress={onBack}
-        className="absolute top-12 left-6 bg-white/10 backdrop-blur p-3 rounded-full active:bg-white/20"
-      >
-        <ArrowLeft size={20} color="white" />
-      </Pressable>
     </View>
 
     <View className="absolute bottom-0 left-0 right-0 items-center" style={{ transform: [{ translateY: 80 }] }}>

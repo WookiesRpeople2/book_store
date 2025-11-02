@@ -1,3 +1,4 @@
+import { API } from "@/constants";
 import { ApiRequestConfig, ApiResponse, Err, Params } from "@/types";
 
 export class ApiService {
@@ -143,3 +144,4 @@ export class ApiService {
   }
 }
 
+export const apiService = new ApiService(API);
