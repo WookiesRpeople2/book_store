@@ -1,5 +1,5 @@
 import React from "react";
-import { FlatList, TouchableOpacity, Text, View, Pressable } from "react-native";
+import { FlatList, TouchableOpacity, Text, View, Pressable, ScrollView } from "react-native";
 import { Book } from "@/types";
 import { Image } from "../image";
 
@@ -14,31 +14,33 @@ export const SearchResults: React.FC<SearchResultsProps> = ({ books, onBookSelec
   }
 
   return (
-    <FlatList
-      data={books}
-      keyExtractor={(item) => item.id.toString()}
-      renderItem={({ item }) => (
-        <Pressable
-          className="flex-row items-center py-3 px-2 active:bg-gray-100 rounded-xl"
-          onPress={() => onBookSelect(item)}
-        >
-          <Image
-            url={item.cover}
-            className="w-12 h-16 rounded-md mr-3 bg-gray-200"
-            resizeMode="cover"
-          />
+    <ScrollView>
+      <FlatList
+        data={books}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+          <Pressable
+            className="flex-row items-center py-3 px-2 active:bg-gray-100 rounded-xl"
+            onPress={() => onBookSelect(item)}
+          >
+            <Image
+              url={item.cover}
+              className="w-12 h-16 rounded-md mr-3 bg-gray-200"
+              resizeMode="cover"
+            />
 
-          <View className="flex-1">
-            <Text className="text-base font-semibold text-gray-900" numberOfLines={1}>
-              {item.name}
-            </Text>
-            <Text className="text-sm text-gray-500" numberOfLines={1}>
-              {item.author}
-            </Text>
-          </View>
-        </Pressable>)}
-      ItemSeparatorComponent={() => <View className="h-[1px] bg-gray-200" />}
-    />
+            <View className="flex-1">
+              <Text className="text-base font-semibold text-gray-900" numberOfLines={1}>
+                {item.name}
+              </Text>
+              <Text className="text-sm text-gray-500" numberOfLines={1}>
+                {item.author}
+              </Text>
+            </View>
+          </Pressable>)}
+        ItemSeparatorComponent={() => <View className="h-[1px] bg-gray-200" />}
+      />
+    </ScrollView>
   );
 };
 

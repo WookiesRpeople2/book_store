@@ -20,7 +20,7 @@ export const BackArrow = () => {
       {!isHomePage ? (
         <Pressable
           onPress={() => router.back()}
-          className="rounded-full p-3 active:opacity-70 bg-transparent"
+          className="rounded-full p-3 active:opacity-70 bg-secondary"
         >
           <ArrowLeft
             size={24}

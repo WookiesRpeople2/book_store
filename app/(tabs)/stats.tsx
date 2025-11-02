@@ -1,13 +1,14 @@
 import { StatsCard } from "@/components/card/statsCard";
 import { StatsChart } from "@/components/chart/statChart";
+import { LoadingSpinner } from "@/components/loaders/loadingSpinner";
 import { useStats } from "@/hooks/stats/useStats";
 import { ScrollView, Text, View } from "react-native";
 
 export default function Stats() {
-  const {data, isLoading} = useStats()
+  const { data, isLoading } = useStats();
 
   if (isLoading) {
-    return <Text>Loading</Text>;
+    return <LoadingSpinner />;
   }
 
   if (!data) {
@@ -16,10 +17,10 @@ export default function Stats() {
 
   const nonReadCount = data.totalBooks - data.readCount;
   const totalBooksX = Array.from({ length: data.totalBooks }, (_, i) => i + 1);
-  const totalBooksY = totalBooksX.map(x => x); 
+  const totalBooksY = totalBooksX.map(x => x);
   return (
     <ScrollView className="flex-1 p-4">
-      <Text className="text-3xl font-bold text-center text-gray-800 mb-6">
+      <Text className="text-3xl font-bold text-center text-gray-800 mb-6 bg-white rounded-md">
         Book Dashboard
       </Text>
 
@@ -53,11 +54,11 @@ export default function Stats() {
           type="progress"
           maxValue={5}
         />
-        
+
         <StatsChart
           title="Total Books Over Time"
-          labels={totalBooksX.map(x => x.toString())} 
-          values={totalBooksY} 
+          labels={totalBooksX.map(x => x.toString())}
+          values={totalBooksY}
           type="line"
           color="#2563EB"
         />

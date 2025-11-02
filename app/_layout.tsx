@@ -16,8 +16,8 @@ import { STORAGE_KEY } from "@/constants";
 import { QueryClient } from "@tanstack/react-query";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import NetInfo from "@react-native-community/netinfo";
-import { ThemeProvider as NavThemeProvider} from "@react-navigation/native";
-import { ThemeContext, ThemeProvider } from "@/context/themeContext";
+import { ThemeProvider as NavThemeProvider } from "@react-navigation/native";
+import { ThemeProvider } from "@/context/themeContext";
 import { useTheme } from "@/hooks/useTheme";
 import { PersistGate } from "@/components/loaders/persistGate";
 
@@ -58,45 +58,45 @@ const setupNetworkListener = () => {
 };
 
 const Content = () => (
-    <>
-      <StatusBar style={useColorScheme() === 'dark' ? 'light' : 'dark'} />
-      <ToastManager config={toastProvider} />
-      <ErrorBoundary FallbackComponent={({ error }) => (
-        <ErrorAlert message={error.message} />
-      )}>
-        <BackArrow />
-        <Stack screenOptions={{ headerShown: false }}/>
-      </ErrorBoundary>
-      <PortalHost />
-    </>
-  );
+  <>
+    <StatusBar style={useColorScheme() === 'dark' ? 'light' : 'dark'} />
+    <ToastManager config={toastProvider} />
+    <ErrorBoundary FallbackComponent={({ error }) => (
+      <ErrorAlert message={error.message} />
+    )}>
+      <BackArrow />
+      <Stack screenOptions={{ headerShown: false, }} />
+    </ErrorBoundary>
+    <PortalHost />
+  </>
+);
 
 
 const Providers = () => {
-  const {colorScheme} = useTheme();
+  const { colorScheme } = useTheme();
   useEffect(() => {
-    if(Platform.OS == "web")return
+    if (Platform.OS == "web") return;
     const unsubscribe = setupNetworkListener();
     return () => unsubscribe();
   }, []);
-  
+
 
   return (
     <NavThemeProvider value={NAV_THEME[colorScheme]}>
-        <PersistQueryClientProvider client={queryClient} persistOptions={{
-          persister: asyncStoragePersister, dehydrateOptions: {
-            shouldDehydrateQuery: (query) => {
-              return query.state.status !== 'success';
-            },
+      <PersistQueryClientProvider client={queryClient} persistOptions={{
+        persister: asyncStoragePersister, dehydrateOptions: {
+          shouldDehydrateQuery: (query) => {
+            return query.state.status !== 'success';
           },
-        }}>
-          <PersistGate>
-            <Content />
-          </PersistGate>
-        </PersistQueryClientProvider>
-      </NavThemeProvider >
-  )
-}
+        },
+      }}>
+        <PersistGate>
+          <Content />
+        </PersistGate>
+      </PersistQueryClientProvider>
+    </NavThemeProvider >
+  );
+};
 
 
 export default function RootLayout() {
