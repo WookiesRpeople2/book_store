@@ -13,17 +13,18 @@ import { DeleteAlerte } from "@/components/alert/deleteAlerte";
 import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
 import { Toast } from "toastify-react-native";
 import { Book, Notes } from "@/types";
-import { useQueryClient } from "@tanstack/react-query";
 import { BOOKS_API_BOOK_ENDPOINT } from "@/constants";
+import { useOpenLib } from "@/hooks/openLib/useOpenLib";
+import { queryClient } from "@/app/_layout";
 
 
 export default function Index() {
   const { id } = useLocalSearchParams<{ id: string; }>();
   const { data: bookData, isLoading: bookLoading, refetch: refetchBooks } = useBooks({ params: [id] });
   const { data: noteData, isLoading: noteLoading, refetch: refetchNotes } = useBooks<Notes[]>({ params: [id, "notes"] });
-  const { mutate: mutateDelete} = useBooks({ method: "DELETE", params: [id], mutationOptions: {onSuccess: ()=>queryClient.invalidateQueries({queryKey: [BOOKS_API_BOOK_ENDPOINT]})} });
+  const { data: openLibData, isLoading: openLibLoading } = useOpenLib({ params: { title: bookData?.name || '', fields: "edition_count"}, enabled: !!bookData?.name });
+  const { mutate: mutateDelete } = useBooks({ method: "DELETE", params: [id], mutationOptions: { onSuccess: () => queryClient.invalidateQueries({ queryKey: [BOOKS_API_BOOK_ENDPOINT] }) } });
   const { mutateAsync: mutateCreate, isPending: isPendingCreate } = useBooks<Notes>({ method: "POST", params: [id, "notes"] });
-  const queryClient = useQueryClient()
   const { trigger } = useRefreshOnFocus({
     onRefresh: () => {
       refetchBooks();
@@ -34,14 +35,14 @@ export default function Index() {
   const router = useRouter();
 
   const handleOnBack = () => {
-    router.back()
+    router.back();
   };
 
   const handleOnDelete = () => {
     mutateDelete({});
     trigger();
-    
-    router.back()
+
+    router.back();
     Toast.show({
       type: "success",
       text1: "book succsesfully deleted",
@@ -64,7 +65,7 @@ export default function Index() {
     router.push({ pathname: "/books/[id]/edit", params: { id } });
   };
 
-  if (bookLoading || noteLoading) {
+  if (bookLoading || noteLoading || openLibLoading) {
     return <Text>Loading</Text>;
   }
 
@@ -91,6 +92,7 @@ export default function Index() {
           year={bookData.year}
           theme={bookData.theme}
           notes={noteData}
+          numEditions={openLibData ? openLibData.docs.reduce((sum, doc) => sum + (doc.edition_count || 0), 0) : 1}
           handleNoteCreated={handleCreate}
           isPending={isPendingCreate}
         />

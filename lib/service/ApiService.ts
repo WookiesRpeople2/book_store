@@ -1,4 +1,3 @@
-import { API } from "@/constants";
 import { ApiRequestConfig, ApiResponse, Err, Params } from "@/types";
 
 export class ApiService {
@@ -45,8 +44,6 @@ export class ApiService {
     data?: any,
     headers: Record<string, string> = {},
   ): Promise<ApiResponse<T>> {
-    const isBody = this.isBodyMethod(method);
-
     const url = this.buildURL(endpoint, params ? params : undefined);
 
     const options: RequestInit = {
@@ -101,7 +98,7 @@ export class ApiService {
     const searchParams = new URLSearchParams();
     Object.entries(params).forEach(([key, value]) => {
       if (value !== undefined && value !== null) {
-        searchParams.append(key, String(value));
+        searchParams.append(key, encodeURIComponent(value));
       }
     });
 

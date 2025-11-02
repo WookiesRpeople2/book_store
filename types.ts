@@ -22,6 +22,7 @@ export type ApiResponse<T> = {
 
 
 export type ApiHookConfig<TData, TVariables> = {
+  api?: string;
   endpoint?: string;
   method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
   params?: Params;
@@ -67,3 +68,10 @@ export type Stats = {
   favoritesCount: number;
   averageRating: number;
 };
+
+export type OpenLib = {
+  numFound: number;
+  docs: {
+    edition_count: number;
+  }[];
+}

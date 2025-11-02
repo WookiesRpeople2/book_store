@@ -8,7 +8,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const createApiHook = <TData, TVariables = void>(endpoint: string) => {
+export const createApiHook = <TData, TVariables = void>(api: string, endpoint: string) => {
   return ({
     method = "GET",
     params,
@@ -16,6 +16,7 @@ export const createApiHook = <TData, TVariables = void>(endpoint: string) => {
     mutationOptions,
   }: ApiHookConfig<TData, TVariables> = {} as ApiHookConfig<TData, TVariables>) => {
     return useApi<TData, TVariables>({
+      api,
       endpoint,
       method,
       params,

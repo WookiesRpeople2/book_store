@@ -1,17 +1,16 @@
 import { useMutation, UseMutationResult, useQuery, UseQueryResult, useSuspenseQuery } from '@tanstack/react-query';
 import { ApiService } from '@/lib/service/ApiService';
 import { ApiHookConfig, ApiResponse } from '@/types';
-import { API } from '@/constants';
-
-export const apiService = new ApiService(API);
 
 export const useApi = <TData, TVariables>({
+  api,
   endpoint,
   method,
   params,
   enabled,
   mutationOptions,
 }: ApiHookConfig<TData, TVariables>) => {
+  const apiService = new ApiService(api ?? "");
   const httpMethod = method!.toUpperCase();
   
   if (httpMethod == "GET") {
@@ -23,7 +22,7 @@ export const useApi = <TData, TVariables>({
           method: httpMethod,
           params,
         });
-        return res.data;
+        return (res.data ?? res) as TData;
       },
       enabled,
     });

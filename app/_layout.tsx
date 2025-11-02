@@ -23,7 +23,7 @@ const asyncStoragePersister = createAsyncStoragePersister({
   key: STORAGE_KEY,
 });
 
-const queryClient = new QueryClient({
+export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: 1,
